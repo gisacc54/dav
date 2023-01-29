@@ -42,7 +42,7 @@ class UssdController extends Controller
             $accountNumber  = "ACC1001";
 
             // This is a terminal request. Note how we start the response with END
-            $response = "END Enter amount #".$phoneNumber;
+            $response = "CON Enter amount #".$phoneNumber;
 
         }
 
