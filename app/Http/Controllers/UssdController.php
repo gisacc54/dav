@@ -78,7 +78,7 @@ class UssdController extends Controller
                     $request['phone_number'] = $phoneNumber;
                     $request["user_id"] = $user->user_id;
 
-                    if($ussd_string_exploded[4] == 1){
+                    if($ussd_string_exploded[4] == 2){
                         $request['credit_card'] = true;
                     }else{
                         $request['credit_card'] = false;
