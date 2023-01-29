@@ -15,16 +15,22 @@ class UssdController extends Controller
         //text: user input in form of a string
         $text           = $request->get('text');
 
+        $ussd_string_exploded = explode("*", $text);
+
+        $level = count($ussd_string_exploded);
+
+
         if ($text == "") {
             // This is the first request. Note how we start the response with CON
             $response  = "CON What would you want to check \n";
-            $response .= "1. My Account \n";
-            $response .= "2. My phone number";
+            $response .= "1. Buy Airtime \n";
+            $response .= "2. Update Account";
 
         } else if ($text == "1") {
             // Business logic for first level response
             $response = "CON Choose account information you want to view \n";
-            $response .= "1. Account number \n";
+            $response .= "1. My Number \n";
+            $response .= "2. For a Friend \n";
 
         } else if ($text == "2") {
             // Business logic for first level response
@@ -36,7 +42,7 @@ class UssdController extends Controller
             $accountNumber  = "ACC1001";
 
             // This is a terminal request. Note how we start the response with END
-            $response = "END Your account number is ".$accountNumber;
+            $response = "END Enter amount #".$phoneNumber;
 
         }
 
