@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function (){
             Route::get('/{id}',[\App\Http\Controllers\Admin\AccountController::class,'showAccountPanel'])->name('profile');
             Route::post('/{id}/change/password',[\App\Http\Controllers\Admin\AccountController::class,'changeAccountPassword'])->name('change.password');
             Route::post('/{id}/change/profile/image',[\App\Http\Controllers\Admin\AccountController::class,'changeAccountProfileImage'])->name('change.profile.image');
+
+            Route::post('/{id}/balance',[\App\Http\Controllers\Admin\AccountController::class,'addBalance'])->name('balance');
         });
     });
 
@@ -55,14 +57,17 @@ Route::middleware('auth')->group(function (){
     });
 
     //Staff
-    Route::prefix('/staff')->name('staff.')->middleware('staff')->group(function (){
+    Route::prefix('/')->name('staff.')->middleware('staff')->group(function (){
         //Dashboard
         Route::get('/',[\App\Http\Controllers\Staff\HomeController::class,'showStaffDashboard'])->name('dashboard');
-
+        Route::post('/buy',[\App\Http\Controllers\Staff\HomeController::class,'buyAirTime'])->name('buy');
+        Route::get('/transaction',[\App\Http\Controllers\Staff\HomeController::class,'transaction'])->name('transaction');
         //Account
         Route::prefix('account')->name('account.')->group(function (){
             Route::get('/',[\App\Http\Controllers\Staff\AccountController::class,'showMyAccountPanel'])->name('my-account');
             Route::post('/{id}/change/password',[\App\Http\Controllers\Staff\AccountController::class,'changeAccountPassword'])->name('change.password');
+
+            Route::post('/credit-card',[\App\Http\Controllers\Staff\AccountController::class,'addCreditCard'])->name('credit-card');
         });
     });
 });

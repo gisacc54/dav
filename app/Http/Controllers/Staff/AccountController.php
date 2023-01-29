@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff;
 
 use App\Helper\AuthHelper;
 use App\Http\Controllers\Controller;
+use App\Models\PaymentMethod;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +16,12 @@ class AccountController extends Controller
     public function showMyAccountPanel()
     {
         $user = auth()->user();
-        return view('staff.account.index',compact('user'));
+
+        $creditCard = PaymentMethod::where('user_id',$user->id)->first();
+        if (!$creditCard){
+            $creditCard = new PaymentMethod();
+        }
+        return view('staff.account.index',compact('user','creditCard'));
     }
 
     public function changeAccountPassword(Request $request, $id)
@@ -33,5 +39,32 @@ class AccountController extends Controller
             return back()->withError('Fail To change password!');
 
         return  back()->withSuccess('Password changed successful!');
+    }
+
+    public function addCreditCard(Request $request)
+    {
+        $this->validate($request, [
+            'account' => 'required',
+            'name' => 'required',
+            'cvv' => 'required',
+            'month' => 'required',
+            'year' => 'required',
+        ]);
+
+        $request['user_id'] = auth()->id();
+        $creditCard = PaymentMethod::where('user_id',auth()->id())->first();
+        if (!$creditCard){
+            PaymentMethod::create($request->all());
+            return  back()->withSuccess('Credit Cad information created successful');
+        }
+
+            $creditCard->account = $request->account;
+            $creditCard->name = $request->name;
+            $creditCard->cvv = $request->cvv;
+            $creditCard->month = $request->month;
+            $creditCard->year = $request->year;
+            $creditCard->save();
+
+        return  back()->withSuccess('Credit Cad information updated successful');
     }
 }

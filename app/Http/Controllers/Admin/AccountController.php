@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helper\AuthHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -76,5 +78,27 @@ class AccountController extends Controller
         $user->profile_image_thumbnail = $thumbnailFile;
         $user->save();
         return back()->withSuccess('Profile image updated successful!');
+    }
+
+    public function addBalance(Request $request,$id)
+    {
+        $this->validate($request, [
+            'amount' => 'required',
+        ]);
+
+        $request['user_id'] = $id;
+        $request['transaction_type'] = "Deposit";
+        $request['from'] = "Credit-Card";
+        $request['description'] = "Deposited TZS $request->amount  from your Credit-Card";
+
+
+        Transaction::create($request->all());
+
+        $wallet = Wallet::where('user_id',$id)->first();
+        $wallet->amount += $request->amount;
+
+
+        $wallet->save();
+        return back()->withSuccess('Balance added successful int wallet.');
     }
 }

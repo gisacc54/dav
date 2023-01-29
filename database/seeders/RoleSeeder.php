@@ -21,7 +21,7 @@ class RoleSeeder extends Seeder
             'name' => "Manager",
         ]);
         DB::table('roles')->insert([
-            'name' => "Staff",
+            'name' => "User",
         ]);
     }
 }

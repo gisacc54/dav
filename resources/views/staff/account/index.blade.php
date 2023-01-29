@@ -38,9 +38,14 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="mb-3">
-                                        <!-- Download SVG icon from http://tabler-icons.io/i/mail -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="3" y="5" width="18" height="14" rx="2" /><polyline points="3 7 12 13 21 7" /></svg>
-                                        E-Mail: <strong class="ms-3">{{ $user->email }}</strong>
+                                        <!-- Download SVG icon from http://tabler-icons.io/i/credit-card -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="3" y="5" width="18" height="14" rx="3" /><line x1="3" y1="10" x2="21" y2="10" /><line x1="7" y1="15" x2="7.01" y2="15" /><line x1="11" y1="15" x2="13" y2="15" /></svg>
+                                        Account Number: <strong class="ms-3">{{ $user->wallet->account }}</strong>
+                                    </div>
+                                    <div class="mb-3">
+                                        <!-- Download SVG icon from http://tabler-icons.io/i/cash -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="7" y="9" width="14" height="10" rx="2" /><circle cx="14" cy="14" r="2" /><path d="M17 9v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h2" /></svg>
+                                        Balance: <strong class="ms-3">TZS {{ $user->wallet->amount }}</strong>
                                     </div>
                                     <div class="mb-3">
                                         <!-- Download SVG icon from http://tabler-icons.io/i/phone -->
@@ -73,9 +78,32 @@
                     </div>
                 </div>
                 <div class="col-md-8">
-                    <div class="row row-cards">
-                        <div class="col-12">
-                            @include('staff.account.partials.change-password-form')
+                    <div class="card">
+                        <ul class="nav nav-tabs" data-bs-toggle="tabs">
+                            <li class="nav-item">
+                                <a href="#tabs-home-9" class="nav-link active" data-bs-toggle="tab">
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/credit-card -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="3" y="5" width="18" height="14" rx="3" /><line x1="3" y1="10" x2="21" y2="10" /><line x1="7" y1="15" x2="7.01" y2="15" /><line x1="11" y1="15" x2="13" y2="15" /></svg>
+                                    Credit Card
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#tabs-profile-9" class="nav-link" data-bs-toggle="tab"><!-- Download SVG icon from http://tabler-icons.io/i/user -->
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/lock -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><rect x="5" y="11" width="14" height="10" rx="2"></rect><circle cx="12" cy="16" r="1"></circle><path d="M8 11v-4a4 4 0 0 1 8 0v4"></path></svg>
+                                    Change Password
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="tab-pane active show" id="tabs-home-9">
+                                    @include('staff.account.partials.credit-card')
+                                </div>
+                                <div class="tab-pane" id="tabs-profile-9">
+                                    @include('staff.account.partials.change-password-form')
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

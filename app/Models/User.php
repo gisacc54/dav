@@ -52,6 +52,14 @@ class User extends Authenticatable
     public function role(){
         return $this->belongsTo(Role::class);
     }
+
+    public function isUser(){
+        return $this->role->name == 'User' ;
+    }
+
+    public function wallet(){
+        return $this->hasOne(Wallet::class);
+    }
     public function settings(){
         return $this->hasOne(UserSetting::class);
     }

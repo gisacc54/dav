@@ -3,9 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Point;
+use App\Models\Role;
+use App\Models\UssdPin;
+use App\Models\Wallet;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -39,6 +45,42 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+    }
+
+    public function register(Request $request)
+    {
+        $this->validate($request, [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'username' => 'required|unique:users',
+            'phone_number' => 'required|unique:users',
+            'gender' => 'required',
+            'dob' => 'required|date_format:Y-m-d',
+            'password' => 'required|confirmed|min:6',
+        ]);
+
+        $request['role_id']= 3;
+        $request['password'] = Hash::make($request->password);
+
+        $user = User::create($request->all());
+
+        Wallet::create([
+            'user_id'=> $user->id,
+            'account'=> "1000241300$user->id",
+        ]);
+
+        $year = Carbon::parse($request->dob)->format("Y");
+        UssdPin::create([
+            'user_id'=> $user->id,
+            'phone_number'=> $user->phone_number,
+            'pin'=>$year,
+        ]);
+
+        Point::create([
+            'user_id'=> $user->id,
+        ]);
+
+        return redirect(route('login'))->withSuccess('User account created successful!');
     }
 
     /**

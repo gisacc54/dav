@@ -18,7 +18,7 @@ class Staff
     public function handle(Request $request, Closure $next)
     {
         $roleName = auth()->user()->role->name;
-        if ($roleName == 'Staff'){
+        if ($roleName == 'User'){
             return $next($request);
         }
         return redirect(AuthHelper::redirectTo($roleName));

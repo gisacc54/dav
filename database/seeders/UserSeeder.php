@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Point;
+use App\Models\User;
+use App\Models\UssdPin;
+use App\Models\Wallet;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +45,7 @@ class UserSeeder extends Seeder
             'created_at'=>Carbon::now(),
             'updated_at'=>Carbon::now(),
         ]);
-        DB::table('users')->insert([
+        $user = User::create([
             'username' => "Staff",
             'first_name' => "Normal",
             'last_name' => "Staff",
@@ -51,8 +55,22 @@ class UserSeeder extends Seeder
             'gender' => 'Male',
             'dob' => '1999-07-01',
             'password' => \Illuminate\Support\Facades\Hash::make("123456"),
-            'created_at'=>Carbon::now(),
-            'updated_at'=>Carbon::now(),
+        ]);
+
+        Wallet::create([
+            'user_id'=> $user->id,
+            'account'=> "1000241300$user->id",
+        ]);
+
+        $year = Carbon::parse("1999-07-01")->format("Y");
+        UssdPin::create([
+            'user_id'=> $user->id,
+            'phone_number'=> $user->phone_number,
+            'pin'=>$year,
+        ]);
+
+        Point::create([
+            'user_id'=> $user->id,
         ]);
     }
 }
