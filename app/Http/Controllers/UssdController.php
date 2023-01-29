@@ -44,23 +44,21 @@ class UssdController extends Controller
 
         } else if($text == "1*1") {
             // This is a second level response where the user selected 1 in the first instance
-            $accountNumber  = "ACC1001";
 
             // This is a terminal request. Note how we start the response with END
-            $response = "CON Enter amount #".$phoneNumber;
+            $response = "CON Enter amount";
 
         }
 
         if ($level == 3){
             if ($ussd_string_exploded[0] ==1 && $ussd_string_exploded[1] == 1){
-                $response = "CON Enter your account pin #";
-                $response = "CON you have recharged My Account amount  Select 1 to #".$ussd_string_exploded[2];
+                $response = "CON Enter your account pin";
             }
         }
 
         if ($level == 4){
             if ($ussd_string_exploded[0] ==1 && $ussd_string_exploded[1] == 1){
-                $response = "CON you have recharged My Account amount $ussd_string_exploded[2] Select \n1. to confirm or \n2. To cancel#".$ussd_string_exploded[2];
+                $response = "CON you have recharged My Account amount $ussd_string_exploded[2] Select \n1. Via Wallet or \n2. Via Credit Card";
 
             }
         }
@@ -75,6 +73,8 @@ class UssdController extends Controller
 
                 if ($user->pin != $pin){
                     $response = "END Invalid Pin";
+                    header('Content-type: text/plain');
+                    echo $response;
                 }
 
                 $request['amount'] = $amount;
