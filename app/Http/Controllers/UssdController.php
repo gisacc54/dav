@@ -70,26 +70,24 @@ class UssdController extends Controller
                 $amount = $ussd_string_exploded[2];
                 $phoneNum = str_replace('+',"",$ussd_string_exploded);
                 $user = UssdPin::where('phone_number',$phoneNum)->first();
-
-                if ($user->pin != $pin){
-                    $response = "END Invalid Pin";
-                    header('Content-type: text/plain');
-                    echo $response;
-                }
-
-                $request['amount'] = $amount;
-                $request['phone_number'] = $phoneNumber;
-                $request["user_id"] = $user->user_id;
-
-                if($ussd_string_exploded[4] == 1){
-                    $request['credit_card'] = true;
-                }else{
-                    $request['credit_card'] = false;
-                }
-
-                $resp = $this->buyAirtime($request);
-
-                $response = "CON $resp->message";
+                $response = "END Invalid Pin $user->pin";
+//                if ($user->pin != $pin){
+//                    $response = "END Invalid Pin";
+//                }else{
+//                    $request['amount'] = $amount;
+//                    $request['phone_number'] = $phoneNumber;
+//                    $request["user_id"] = $user->user_id;
+//
+//                    if($ussd_string_exploded[4] == 1){
+//                        $request['credit_card'] = true;
+//                    }else{
+//                        $request['credit_card'] = false;
+//                    }
+//
+//                    $resp = $this->buyAirtime($request);
+//
+//                    $response = "CON $resp->message";
+//                }
             }
 
         }
