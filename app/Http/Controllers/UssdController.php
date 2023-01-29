@@ -76,12 +76,16 @@ class UssdController extends Controller
                 if ($user->pin != $pin){
                     $response = "END Invalid Pin";
                 }
-                //$ussd_string_exploded[4] == 1
+
                 $request['amount'] = $amount;
                 $request['phone_number'] = $phoneNumber;
-                $request['credit_card'] = false;
                 $request["user_id"] = $user->user_id;
 
+                if($ussd_string_exploded[4] == 1){
+                    $request['credit_card'] = true;
+                }else{
+                    $request['credit_card'] = false;
+                }
 
                 $resp = $this->buyAirtime($request);
 
@@ -94,7 +98,7 @@ class UssdController extends Controller
         echo $response;
     }
 
-    public function buyAirtime($request,$isMe)
+    public function buyAirtime($request,$isMe = true)
     {
         if ($isMe){
             $request['description'] = "You have buy TZS $request->amount airtime for your phone number $request->phone_number";
