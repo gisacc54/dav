@@ -20,6 +20,7 @@ class UssdController extends Controller
         //text: user input in form of a string
         $text           = $request->get('text');
 
+
         $ussd_string_exploded = explode("*", $text);
 
         $level = count($ussd_string_exploded);
@@ -86,7 +87,7 @@ class UssdController extends Controller
 
                     $resp = $this->buyAirtime($request);
 
-                    $response = "CON $resp->message";
+                    $response = "END $resp->message";
                 }
             }
 
@@ -107,20 +108,17 @@ class UssdController extends Controller
 
         $request["transaction_type"] = "Withdraw";
 
-        return (object)[
-            'status'=>true,
-            'message' => "Thanks for using DAV 18"
-        ];
 
         if ($request->credit_card){
             $request['from'] = "Credit-Card";
             //TODO: deduct amount from your credit card
 
             Transaction::create($request->all());
+
             MainService::SendAirTime($request);
             return (object)[
                 'status'=>true,
-                'message' => "Thanks for using DAV"
+                'message' => " Credited successful"
             ];
         }
         $wallet = Wallet::where('user_id',$request->user_id)->first();
@@ -138,10 +136,7 @@ class UssdController extends Controller
         //TODO: deduct balance
         $wallet->amount -= $request->amount;
         $wallet->save();
-        return (object)[
-            'status'=>true,
-            'message' => "Thanks for using DAV 1"
-        ];
+
         //TODO: add points
         $point = Point::where('user_id',$request->user_id)->first();
         $point->point += ($request->amount/100);
@@ -151,7 +146,7 @@ class UssdController extends Controller
 
         return (object)[
             'status'=>true,
-            'message' => "Thanks for using DAV"
+            'message' => "Credited successful"
         ];
     }
 }
