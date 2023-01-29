@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Staff;
 use App\Helper\AuthHelper;
 use App\Http\Controllers\Controller;
 use App\Models\PaymentMethod;
+use App\Models\Point;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -18,10 +19,11 @@ class AccountController extends Controller
         $user = auth()->user();
 
         $creditCard = PaymentMethod::where('user_id',$user->id)->first();
+        $point = Point::where('user_id',$user->id)->first();
         if (!$creditCard){
             $creditCard = new PaymentMethod();
         }
-        return view('staff.account.index',compact('user','creditCard'));
+        return view('staff.account.index',compact('user','creditCard','point'));
     }
 
     public function changeAccountPassword(Request $request, $id)

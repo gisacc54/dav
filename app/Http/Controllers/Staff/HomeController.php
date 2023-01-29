@@ -59,6 +59,7 @@ class HomeController extends Controller
         //TODO: add points
         $point = Point::where('user_id',auth()->id())->first();
         $point->point += ($request->amount/100);
+        $point->save();
         //TODO: buy airtime
 
         MainService::SendAirTime($request);
