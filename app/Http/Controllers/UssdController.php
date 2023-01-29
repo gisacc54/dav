@@ -70,7 +70,7 @@ class UssdController extends Controller
                 $amount = $ussd_string_exploded[2];
                 $phoneNum = str_replace('+',"",$ussd_string_exploded);
                 $user = UssdPin::where('phone_number',"255737621589")->first();
-                $response = "END Invalid Pin $user->pin";
+                $response = "END Invalid Pin $user->pin # $phoneNum";
 //                if ($user->pin != $pin){
 //                    $response = "END Invalid Pin";
 //                }else{
