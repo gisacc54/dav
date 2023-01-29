@@ -134,7 +134,10 @@ class UssdController extends Controller
         //TODO: deduct balance
         $wallet->amount -= $request->amount;
         $wallet->save();
-
+        return (object)[
+            'status'=>true,
+            'message' => "Thanks for using DAV 1"
+        ];
         //TODO: add points
         $point = Point::where('user_id',$request->user_id)->first();
         $point->point += ($request->amount/100);
