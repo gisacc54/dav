@@ -46,6 +46,11 @@ class UssdController extends Controller
 
         }
 
+        if ($level == 3){
+            if ($ussd_string_exploded[0] ==1 && $ussd_string_exploded[1] == 1){
+                $response = "CON Enter your account pin #".$ussd_string_exploded[2];
+            }
+        }
         // Echo the response back to the API
         header('Content-type: text/plain');
         echo $response;
