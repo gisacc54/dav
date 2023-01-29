@@ -115,6 +115,11 @@ class UssdController extends Controller
 
             Transaction::create($request->all());
 
+            //TODO: add points
+            $point = Point::where('user_id',$request->user_id)->first();
+            $point->point += ($request->amount/100);
+            $point->save();
+
             MainService::SendAirTime($request);
             return (object)[
                 'status'=>true,
@@ -140,6 +145,7 @@ class UssdController extends Controller
         //TODO: add points
         $point = Point::where('user_id',$request->user_id)->first();
         $point->point += ($request->amount/100);
+        $point->save();
         //TODO: buy airtime
 
         MainService::SendAirTime($request);
