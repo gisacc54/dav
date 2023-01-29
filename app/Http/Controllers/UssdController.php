@@ -107,6 +107,11 @@ class UssdController extends Controller
 
         $request["transaction_type"] = "Withdraw";
 
+        return (object)[
+            'status'=>true,
+            'message' => "Thanks for using DAV 18"
+        ];
+
         if ($request->credit_card){
             $request['from'] = "Credit-Card";
             //TODO: deduct amount from your credit card
@@ -127,11 +132,6 @@ class UssdController extends Controller
         }
 
 
-
-        return (object)[
-            'status'=>true,
-            'message' => "Thanks for using DAV 18"
-        ];
         //TODO: record transaction
         $request['from'] = "Wallet";
         Transaction::create($request->all());
