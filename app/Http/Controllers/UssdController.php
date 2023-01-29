@@ -83,7 +83,9 @@ class UssdController extends Controller
                 $request["user_id"] = $user->user_id;
 
 
-                $response = "CON you have recharged My Account amount $ussd_string_exploded[2] Select \n1. Via Wallet or \n2. Via Credit Card#".$ussd_string_exploded[2];
+                $resp = $this->buyAirtime($request);
+
+                $response = "CON $resp->message";
             }
 
         }
