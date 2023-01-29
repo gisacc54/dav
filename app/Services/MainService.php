@@ -11,7 +11,7 @@ class MainService
 
         $username = "sandbox";
 
-        $apikey   = "b15bf3a9cb79a01777a18428055b9d69a8fd39aa41511b1f40c7b80dd7bdb444";
+        $apikey   = "610de44f8d182e470c7d87e5ae1edc772e97b84d4b5034cc3adf3779cab9e454";
 
         // Initialize the SDK
         $AT       = new AfricasTalking($username, $apikey);
@@ -33,7 +33,7 @@ class MainService
                 "recipients" => $recipients
             ]);
         } catch(Exception $e) {
-//            echo "Error: ".$e->getMessage();
+//            dd($e->getMessage());
         }
     }
 }

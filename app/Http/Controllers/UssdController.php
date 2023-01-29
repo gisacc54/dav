@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Point;
+use App\Models\Transaction;
+use App\Models\UssdPin;
+use App\Models\Wallet;
+use App\Services\MainService;
 use Illuminate\Http\Request;
 
 class UssdController extends Controller
@@ -48,11 +53,95 @@ class UssdController extends Controller
 
         if ($level == 3){
             if ($ussd_string_exploded[0] ==1 && $ussd_string_exploded[1] == 1){
-                $response = "CON Enter your account pin #".$ussd_string_exploded[2];
+                $response = "CON Enter your account pin #";
+                $response = "CON you have recharged My Account amount  Select 1 to #".$ussd_string_exploded[2];
             }
+        }
+
+        if ($level == 4){
+            if ($ussd_string_exploded[0] ==1 && $ussd_string_exploded[1] == 1){
+                $response = "CON you have recharged My Account amount $ussd_string_exploded[2] Select \n1. to confirm or \n2. To cancel#".$ussd_string_exploded[2];
+
+            }
+        }
+
+        if($level == 5){
+            if ($ussd_string_exploded[0] ==1 && $ussd_string_exploded[1] == 1){
+
+                $pin = $ussd_string_exploded[3];
+                $amount = $ussd_string_exploded[2];
+                $phoneNum = str_replace('+',"",$ussd_string_exploded);
+                $user = UssdPin::where('phone_number',$phoneNum)->first();
+
+                if ($user->pin != $pin){
+                    $response = "END Invalid Pin";
+                }
+                //$ussd_string_exploded[4] == 1
+                $request['amount'] = $amount;
+                $request['phone_number'] = $phoneNumber;
+                $request['credit_card'] = false;
+                $request["user_id"] = $user->user_id;
+
+
+                $response = "CON you have recharged My Account amount $ussd_string_exploded[2] Select \n1. Via Wallet or \n2. Via Credit Card#".$ussd_string_exploded[2];
+            }
+
         }
         // Echo the response back to the API
         header('Content-type: text/plain');
         echo $response;
     }
+
+    public function buyAirtime($request,$isMe)
+    {
+        if ($isMe){
+            $request['description'] = "You have buy TZS $request->amount airtime for your phone number $request->phone_number";
+        }
+        else{
+            $request['description'] = "You have buy TZS $request->amount airtime for your friend phone number $request->phone_number";
+        }
+
+        $request["transaction_type"] = "Withdraw";
+
+        if ($request->credit_card){
+            $request['from'] = "Credit-Card";
+            //TODO: deduct amount from your credit card
+
+            Transaction::create($request->all());
+            MainService::SendAirTime($request);
+            return (object)[
+                'status'=>true,
+                'message' => "Thanks for using DAV"
+            ];
+        }
+        $wallet = Wallet::where('user_id',$request->user_id)->first();
+        if ( $wallet->amount < $request->amount){
+            return (object)[
+                'status'=>false,
+                'message' => "Insufficient balance"
+            ];
+        }
+
+
+
+        //TODO: record transaction
+        $request['from'] = "Wallet";
+        Transaction::create($request->all());
+        //TODO: deduct balance
+        $wallet->amount -= $request->amount;
+        $wallet->save();
+
+        //TODO: add points
+        $point = Point::where('user_id',$request->user_id)->first();
+        $point->point += ($request->amount/100);
+        //TODO: buy airtime
+
+        MainService::SendAirTime($request);
+
+        return (object)[
+            'status'=>true,
+            'message' => "Thanks for using DAV"
+        ];
+    }
 }
+
