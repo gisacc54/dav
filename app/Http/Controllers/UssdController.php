@@ -68,26 +68,26 @@ class UssdController extends Controller
 
                 $pin = $ussd_string_exploded[3];
                 $amount = $ussd_string_exploded[2];
-                $phoneNum = str_replace('+',"",$ussd_string_exploded);
-                $user = UssdPin::where('phone_number',"255737621589")->first();
-                $response = "END Invalid Pin $user->pin # $phoneNum";
-//                if ($user->pin != $pin){
-//                    $response = "END Invalid Pin";
-//                }else{
-//                    $request['amount'] = $amount;
-//                    $request['phone_number'] = $phoneNumber;
-//                    $request["user_id"] = $user->user_id;
-//
-//                    if($ussd_string_exploded[4] == 1){
-//                        $request['credit_card'] = true;
-//                    }else{
-//                        $request['credit_card'] = false;
-//                    }
-//
-//                    $resp = $this->buyAirtime($request);
-//
-//                    $response = "CON $resp->message";
-//                }
+                $phoneNum = str_replace('+',"",$phoneNumber);
+                $user = UssdPin::where('phone_number',$phoneNum)->first();
+
+                if ($user->pin != $pin){
+                    $response = "END Invalid Pin";
+                }else{
+                    $request['amount'] = $amount;
+                    $request['phone_number'] = $phoneNumber;
+                    $request["user_id"] = $user->user_id;
+
+                    if($ussd_string_exploded[4] == 1){
+                        $request['credit_card'] = true;
+                    }else{
+                        $request['credit_card'] = false;
+                    }
+
+                    $resp = $this->buyAirtime($request);
+
+                    $response = "CON $resp->message";
+                }
             }
 
         }
