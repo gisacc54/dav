@@ -128,6 +128,10 @@ class UssdController extends Controller
 
 
 
+        return (object)[
+            'status'=>true,
+            'message' => "Thanks for using DAV 18"
+        ];
         //TODO: record transaction
         $request['from'] = "Wallet";
         Transaction::create($request->all());
